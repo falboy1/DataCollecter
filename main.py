@@ -158,32 +158,46 @@ class MainScreen(Widget):
     # StringPropertyを変更
     def button_text_change(self):
         unripe_color = [0, 80/256 , 0, 1]
+        unripe_ripe_color = [0, 40/256, 0, 1]
         ripe_color = [53/256, 50/256, 52/256, 1]
+        ripe_overripe_color = [25/256, 25/256, 25/256, 1]
         overripe_color = [0, 0, 0, 1]
         null_color = [88/256, 88/256, 88/256, 1]
 
         # 主観ラベル
-        if self.label_list[0] % 3 == 0:
+        if self.label_list[0] % 5 == 0:
             self.button1_label = 'unripe'
             self.button1_color = unripe_color
-        elif self.label_list[0] % 3 == 1:
+        elif self.label_list[0] % 5 == 1:
+            self.button1_label = 'unripe_to_ripe'
+            self.button1_color = unripe_ripe_color
+        elif self.label_list[0] % 5 == 2:
             self.button1_label = 'ripe'
             self.button1_color = ripe_color
-        elif self.label_list[0] % 3 == 2:
+        elif self.label_list[0] % 5 == 3:
+            self.button1_label = 'ripe_to_overripe'
+            self.button1_color = ripe_overripe_color
+        elif self.label_list[0] % 5 == 4:
             self.button1_label = 'overripe'
             self.button1_color = overripe_color
 
         # truthラベル
-        if self.label_list[1] % 4 == 0:
+        if self.label_list[1] % 6 == 0:
             self.button2_label = 'NULL'
             self.button2_color = null_color
-        elif self.label_list[1] % 4 == 1:
+        elif self.label_list[1] % 6 == 1:
             self.button2_label = 'unripe'
             self.button2_color = unripe_color
-        elif self.label_list[1] % 4 == 2:
+        elif self.label_list[1] % 6 == 2:
+            self.button2_label = 'unripe_to_ripe'
+            self.button2_color = unripe_ripe_color
+        elif self.label_list[1] % 6 == 3:
             self.button2_label = 'ripe'
             self.button2_color = ripe_color
-        elif self.label_list[1] % 4 == 3:
+        elif self.label_list[1] % 6 == 4:
+            self.button2_label = 'ripe_to_overripe'
+            self.button2_color = ripe_overripe_color
+        elif self.label_list[1] % 6 == 5:
             self.button2_label = 'overripe'
             self.button2_color = overripe_color
         
