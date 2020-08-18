@@ -1,0 +1,76 @@
+#:kivy 1.0.9
+
+MainScreen:
+
+<MainScreen>:
+    id: main
+    captured_images: captured_images
+    preview: camera_preview
+    textbox: textbox
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size: root.size
+        padding: 30
+        spacing: 30
+        # プレビュー画面
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.8
+            TextInput:
+                id: textbox
+                size_hint_y: 0.05
+                size_hint_x: 0.1
+            CameraPreview:
+                id: camera_preview
+                size_hint_y: 1.0
+            # ボタンのボックスレイアウト
+            BoxLayout:
+                size_hint_y: 0.2
+                orientation: 'horizontal'
+                padding: 20
+                spacing: 10
+                Button:
+                    id: my_label_button
+                    text: root.button1_label
+                    background_normal: ''
+                    background_color: root.button1_color
+                    on_press: root.button1Clicked()
+                    border: (16,16,16,16)
+                Button:
+                    id: truth_label_button
+                    text: root.button2_label
+                    background_normal: ''
+                    background_color: root.button2_color
+                    on_press: root.button2Clicked()
+                Button:
+                    id: stem_label_button
+                    text: root.button3_label
+                    on_press: root.button3Clicked()
+                Button:
+                    id: next_button
+                    text: 'insert data'
+                    on_press: root.buttonInsertClicked()
+
+        ScrollView:
+            size_hint_x: 0.2
+            canvas.before:
+                Color:
+                    rgba: 0.1,0.1,0.1,1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            CapturedImages:
+                id: captured_images
+                orientation: 'vertical'
+                spacing: 10
+                size_hint_y: None
+                height: self.minimum_height
+
+    ImageButton:
+        preview: camera_preview
+        source: 'icons/capture4.png'
+        size: 60, 60
+        pos: camera_preview.width * 0.5 , camera_preview.height * 0.25
+        on_press: root.buttonCaptureClicked()
