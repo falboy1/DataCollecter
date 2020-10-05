@@ -60,7 +60,7 @@ files_dic = {}
 for cn in CLASS_NAMES:
     make_dirs(cn)
     # 空のリストを各クラス名ごとに作成
-    files_dic{cn: list()}
+    files_dic[cn] = list()
     
 
 # データベースファイル読み込み
