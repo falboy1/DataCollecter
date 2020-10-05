@@ -38,11 +38,11 @@ def split_images(files_dic, ratio=0.8):
 
         for i, file_path in enumerate(files):
             if i <= img_num * ratio:
-                shutil.copy2(file_path, 'train/' + k + '/' + file_path)
-                print(file_path, 'train/' + k + '/' + file_path)
+                shutil.copy2('./images/' + file_path, 'train/' + k + '/' + file_path)
+                print('./images/' + file_path, 'train/' + k + '/' + file_path)
             else:
-                shutil.copy2(file_path, 'val/' + k + '/' + file_path)
-                print(file_path, 'val/' + k + '/' + file_path)
+                shutil.copy2('./images' + file_path, 'val/' + k + '/' + file_path)
+                print('./images' + file_path, 'val/' + k + '/' + file_path)
 
 
 
