@@ -165,19 +165,22 @@ class MainScreen(Widget):
         null_color = [88/256, 88/256, 88/256, 1]
 
         # 主観ラベル
-        if self.label_list[0] % 5 == 0:
+        if self.label_list[0] % 6 == 0:
+            self.button1_label = 'NULL'
+            self.button1_color = null_color
+        elif self.label_list[0] % 6 == 1:
             self.button1_label = 'unripe'
             self.button1_color = unripe_color
-        elif self.label_list[0] % 5 == 1:
+        elif self.label_list[0] % 6 == 2:
             self.button1_label = 'unripe_to_ripe'
             self.button1_color = unripe_ripe_color
-        elif self.label_list[0] % 5 == 2:
+        elif self.label_list[0] % 6 == 3:
             self.button1_label = 'ripe'
             self.button1_color = ripe_color
-        elif self.label_list[0] % 5 == 3:
+        elif self.label_list[0] % 6 == 4:
             self.button1_label = 'ripe_to_overripe'
             self.button1_color = ripe_overripe_color
-        elif self.label_list[0] % 5 == 4:
+        elif self.label_list[0] % 6 == 5:
             self.button1_label = 'overripe'
             self.button1_color = overripe_color
 
@@ -206,6 +209,7 @@ class MainScreen(Widget):
             self.button3_label = 'stem'
         elif self.label_list[2] % 2 == 1:
             self.button3_label = 'nonstem'
+    
 
     # 撮影ボタンクリック時の動作
     def buttonCaptureClicked(self):
