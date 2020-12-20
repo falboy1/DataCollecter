@@ -6,6 +6,7 @@ import traceback
 import shutil
 import pprint
 import random
+from PIL import Image
 
 
 def make_dirs(class_name):
@@ -69,6 +70,8 @@ def split_images(files_dic, ratio=0.8):
 
 
 
+
+
 # 対象のクラス
 CLASS_NAMES = ('unripe', 'ripe', 'overripe')
 files_dic = {}
@@ -88,3 +91,4 @@ conn = sqlite3.connect(db_path)
 
 append_img_path(conn, files_dic, MAX_NUM)
 split_images(files_dic, 0.8)
+
