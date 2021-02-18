@@ -7,6 +7,7 @@ import shutil
 import pprint
 import random
 from PIL import Image
+from collections import Counter
 
 
 def make_dirs(class_name):
@@ -15,16 +16,21 @@ def make_dirs(class_name):
     train_dir.mkdir(exist_ok=True, parents=True)
     val_dir = Path('./val', class_name)
     val_dir.mkdir(exist_ok=True, parents=True)
+    eval_dir = Path('./eval', class_name)
+    eval_dir.mkdir(exist_ok=True, parents=True)
 
 
-def append_img_path(conn, files_dic, num):
+def append_img_path(conn, files_dic, eval_files_dic):
     # データを取得して各クラスごとに用意されたリストに画像パス格納
-    query = 'SELECT noninvasive, invasive, path FROM Avocados'
+    query = 'SELECT avo_id, noninvasive, invasive, path FROM Avocados'
+
+    is_eval = False # 評価用データ判定用フラグ
 
     for row in conn.execute(query):
-        noninvasive = row[0]
-        invasive = row[1]
-        img_path = row[2]
+        avo_id = row[0]
+        noninvasive = row[1]
+        invasive = row[2]
+        img_path = row[3]
         #print(noninvasive, invasive, img_path)
         correct_label = None
         # ラベルなしデータはスキップ
@@ -39,9 +45,16 @@ def append_img_path(conn, files_dic, num):
         if correct_label == 'ripe_to_overripe' or correct_label == 'unripe_to_ripe':
             continue
 
-        # label名をkeyに持つ辞書にパスが格納されていく
-        files_dic[correct_label].append(img_path)
-    
+        # 評価用データか判定
+        if avo_id.startswith('ex'):
+            eval_files_dic[correct_label].append(img_path)
+        else:
+            # label名をkeyに持つ辞書にパスが格納されていく
+            files_dic[correct_label].append(img_path)
+
+
+# アンダーサンプリング
+def under_sampling(files_dic, num):
     for k, v in files_dic.items():
         # 全ての画像パスが格納されているところからランダムにnum個選び直す (重複なし)
         # 画像数が指定数を下回るクラスはなにもしない (全ての画像が使用される)
@@ -50,7 +63,10 @@ def append_img_path(conn, files_dic, num):
         else:
             files_dic[k] = random.sample(v, num)
 
+    return files_dic
 
+
+# trainとvalに分ける
 def split_images(files_dic, ratio=0.8):
     
     for k, files in files_dic.items():
@@ -69,26 +85,48 @@ def split_images(files_dic, ratio=0.8):
             traceback.print_exc()
 
 
+def copy_images(files_dic):
+    for k, files in files_dic.items():
+        img_num = len(files)
+        print(img_num)
+
+        try:
+            for i, file_path in enumerate(files):
+                shutil.copy2('./images/' + file_path, 'eval/' + k + '/' + file_path)
+        except Exception:
+            traceback.print_exc()
+
+
+def print_count(files_dic, mode):
+    for k, files in files_dic.items():
+        print(mode, k, len(files))
+
 
 
 
 # 対象のクラス
 CLASS_NAMES = ('unripe', 'ripe', 'overripe')
 files_dic = {}
-# 1クラスにおける最大画像
-MAX_NUM = 300
+eval_files_dic = {}
 
-# 画像格納先ディレクトリ作成
+# 1クラスにおける最大画像
+MAX_NUM = 340
+
+# ラベル名のディレクトリを作成
 for cn in CLASS_NAMES:
     make_dirs(cn)
     # 空のリストを各クラス名ごとに作成
     files_dic[cn] = []
+    eval_files_dic[cn] = []
 
 
 # データベースファイル読み込み
 db_path = 'test4.db'
 conn = sqlite3.connect(db_path)
-
-append_img_path(conn, files_dic, MAX_NUM)
+append_img_path(conn, files_dic, eval_files_dic)
+print_count(files_dic, 'train')
+print_count(eval_files_dic, 'eval')
+under_sampling(files_dic, MAX_NUM)
 split_images(files_dic, 0.8)
+copy_images(eval_files_dic)
 
